@@ -9,18 +9,21 @@ let payerPoints = {
 };
 let pointTransactions = [];
 
+let transactionKeys = ['payer', 'points', 'timestamp']
+function validateKeys(obj) {
+  return transactionKeys.every({}.hasOwnProperty.bind(obj));
+};
+
+
 // all routes in here are starting with /users
 router.get('/', (req, res) => {
   res.send(payerPoints);
 });
 
 router.post('/', (req, res) => {
+  console.log(validateKeys(req.body))
   let transaction = req.body;
-  pointTransactions.push(transaction);
-  res.send(`Points added:\n${transaction}`)
-  console.log(pointTransactions)
+  res.send(transaction)
 })
-
-console.log(pointTransactions)
 
 module.exports = router;
