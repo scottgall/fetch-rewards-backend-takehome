@@ -4,16 +4,14 @@ const { body, validationResult } = require('express-validator');
 
 let totalPoints = 0;
 let payerPoints = {};
-let pointTransactions = [
-  {"payer": "MILLER COORS", "points": 10000, "timestamp": "2020-11-01T14:00:00Z"},
-  {"payer": "DANNON", "points": 300, "timestamp": "2020-10-31T10:00:00Z"} 
-];
+let pointTransactions = [];
 
-// all routes in here are starting with /users
+// get points balance
 router.get('/', (req, res) => {
   res.send(payerPoints);
 });
 
+// add transaction
 router.post('/', [
   body('payer').isString().toUpperCase(),
   body('points').isInt(),
@@ -27,11 +25,17 @@ router.post('/', [
     if(!errors.isEmpty()) return res.status(422).send(errors.array({ onlyFirstError: true}))
     next();
 }, (req, res) => {
-    let payer = req.body.payer
-    let points = req.body.points
+
+    var payer = req.body.payer
+    var points = req.body.points
+
+    if (points == 0) {
+      return res.status(422).json({ error: "Unable to add transaction", reason: "Points must be a positive or negative integer"})
+    }
 
     if ((!payerPoints[payer] && points < 0) || ((payerPoints[payer] + points) < 0)) {
-      return res.status(422).json({ error: "Unable to add transaction", reason: "Payer balance can't go negative"});
+      console.log('hello')
+      return res.status(422).json({ error: "Unable to add transaction", reason: `Payer balance can't go negative. ${payer} has ${!payerPoints[payer] ? 0 : payerPoints[payer]} points in account` });
     } else if (!payerPoints[payer]) {
       payerPoints[payer] = points
     } else {
@@ -41,44 +45,48 @@ router.post('/', [
     totalPoints += points
     
     if (points < 0) {
-      absPoints = Math.abs(points);
-      console.log(absPoints)
-      removeIndex = [];
 
+      var absPoints = Math.abs(points);
+      var removeIndex = [];
       var counter = pointTransactions.length - 1;
+
+
       while (absPoints > 0) {
-        if (pointTransactions[counter]['payer'] === payer) {
-          if (pointTransactions[counter]['points'] === absPoints) {
+        var transPayer = pointTransactions[counter]['payer'];
+        var transPoints = pointTransactions[counter]['points'];
+        if (transPayer === payer) {
+          if (transPoints === absPoints) {
             absPoints = 0
             removeIndex.push(counter)
-          } else if (pointTransactions[counter]['points'] > absPoints) {
+          } else if (transPoints > absPoints) {
             pointTransactions[counter]['points'] -= absPoints
             absPoints = 0
-          } else if (pointTransactions[counter]['points'] < absPoints) {
+          } else {
             removeIndex.push(counter)
-            absPoints -= pointTransactions[counter]['points']
+            absPoints -= transPoints
           }
         }
         counter--
       }
+
       for (i=0;i<removeIndex.length;i++) {
         pointTransactions.splice(removeIndex[i],1);
       }
+
     }
 
     if (points > 0) {
       pointTransactions.push(req.body);
-      pointTransactions = pointTransactions.sort((a,b) => b.timestamp - a.timestamp);
+      pointTransactions.sort(function(a, b) {
+        return (a.timestamp < b.timestamp) ? -1 : ((a.timestamp > b.timestamp) ? 1 : 0);
+      });
     }
-    // for (i=0;i<pointTransactions.length;i++) {
-    //   console.log(pointTransactions[i]);
-    // };      
-    // console.log(payerPoints)
-    // console.log(`total ${totalPoints}`)
-    // console.log('----------------------')
+    console.log(pointTransactions)
+
     res.status(200).json({ success: "transaction added", transaction: req.body})
 });
 
+// spend points
 router.post('/spend', [
   body('points').isInt(),
   body().custom(body => {
@@ -90,72 +98,47 @@ router.post('/spend', [
     if(!errors.isEmpty()) return res.status(422).send(errors.array({ onlyFirstError: true}))
     next();
 }, (req, res) => {
-    var points = req.body['points']
-    console.log(points)
+    var points = req.body.points
     
     if(points <= 0) {
-      return res.status(422).json({ error: "Unable to spend points", reason: "points param must be positive integer above 0"})
+      return res.status(422).json({ error: "Unable to spend points.", reason: "Points param must be positive integer above 0."})
+    }
+    if(points > totalPoints) {
+      return res.status(422).json({ error: "Unable to spend points.", reason: `Only ${totalPoints} points available to spend.`})
     }
 
     var spent = {}
 
+    var removeIndex = [];
 
-    // if ((!payerPoints[payer] && points < 0) || ((payerPoints[payer] + points) < 0)) {
-    //   return res.status(422).json({ error: "Unable to add transaction", reason: "Payer balance can't go negative"});
-    // } else if (!payerPoints[payer]) {
-    //   payerPoints[payer] = points
-    // } else {
-    //   payerPoints[payer] += points
-    // }
-
-    // totalPoints += points
-    
-    // if (points < 0) {
-    //   absPoints = Math.abs(points);
-    //   console.log(absPoints)
-      var removeIndex = [];
-
-      var counter = 0;
-      while (points > 0) {
-        var transPayer = pointTransactions[counter]['payer']
-        console.log('payer: ', transPayer)
-        var transPoints = pointTransactions[counter]['points']
-        console.log('points', transPoints)
-        if (pointTransactions[counter]['points'] === points) {
-          !pointTransactions[counter]['payer'] in spent ? spent[[pointTransactions][counter]['payer']] = points : spent[[pointTransactions][counter]['payer']] += points;
-          points = 0
-          removeIndex.push(counter)
-        } else if (transPoints > points) {
-          transPayer in spent ? spent[transPayer] += points : spent[transPayer] = points;
-          pointTransactions[counter]['points'] -= points
-          points = 0
-          console.log(pointTransactions[counter])
-        } else if (pointTransactions[counter]['points'] < points) {
-          pointTransactions[counter]['payer'] in spent ? spent[[pointTransactions][counter]['payer']] = pointTransactions[counter]['points'] : spent[[pointTransactions][counter]['payer']] += pointTransactions[counter]['points'];
-          points -= pointTransactions[counter]['points']
-          removeIndex.push(counter)
-        }
-        counter++
+    var counter = 0;
+    while (points > 0) {
+      var transPayer = pointTransactions[counter]['payer']
+      var transPoints = pointTransactions[counter]['points']
+      if (transPoints == points) {
+        transPayer in spent ? spent[transPayer] += points : spent[transPayer] = points;
+        payerPoints[transPayer] -= points
+        points = 0
+        removeIndex.push(counter)
+      } else if (transPoints > points) {
+        transPayer in spent ? spent[transPayer] += points : spent[transPayer] = points;
+        pointTransactions[counter]['points'] -= points
+        payerPoints[transPayer] -= points
+        points = 0
+      } else {
+        spent[transPayer] = transPoints;
+        points -= transPoints
+        payerPoints[transPayer] -= transPoints
+        removeIndex.push(counter)
       }
+      counter++
+    }
 
-      console.log(removeIndex)
-      // for (i=removeIndex-1; i >= 0; i--) {
-      //   pointTransactions.splice(removeIndex[i],1);
-      // }
-
-    // if (points > 0) {
-    //   pointTransactions.push(req.body);
-    //   pointTransactions = pointTransactions.sort((a,b) => b.timestamp - a.timestamp);
-    // }
-    // for (i=0;i<pointTransactions.length;i++) {
-    //   console.log(pointTransactions[i]);
-    // };      
-    // console.log(payerPoints)
-    // console.log(`total ${totalPoints}`)
-    // console.log('----------------------')
-
-    console.log(spent)
-    res.status(200).json({ success: "transaction added", transaction: spent})
+    var spentList = [];
+    for (const payer in spent) {
+      spentList.push({ "payer": payer, "points": spent[payer]*-1})
+    }
+    res.status(200).send(spentList)
 });
 
 
