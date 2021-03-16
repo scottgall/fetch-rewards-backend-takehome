@@ -50,21 +50,25 @@ We will be using **Postman** to make calls to the API.
 * From your acount's home screen, create or use an existing `Workspace` by clicking on `Workspace` in the top left menu bar.
 * Once you're in a workspace, click on `Create a request` on the right under `Getting started`.
 * Now your interface should look like the image below.
-![Postman start](/assets/images/postman-start.jpg)
+>![Postman start](/assets/images/postman-start.jpg)
 * Let's start by adding some transactions
 
-### POST Transaction Route
+## POST Route "/points" - Add Payer Transaction
+***REQUEST BODY FORMAT*** 
+```
+{"payer": <str>, "points": <int>, "timestamp": <ISO8601>}
+```
 * Click the dropdown that says `GET` and select `POST`.
 * Enter the server port with the `/points` endpoint.
-![Postman 2](/assets/images/postman-2.jpg)
+>![Postman 2](/assets/images/postman-2.jpg)
 * Under the URL, select `Body` and  check the `raw` radio button and select `JSON` from the dropdown.
-* Enter a valid transaction object in the section below, which you can copy and paste from [points.json](points.json).
-![Postman 3](/assets/images/postman-3.jpg)
+* Enter a valid request body in the section below, which you can copy and paste from [points.json](points.json).
+>![Postman 3](/assets/images/postman-3.jpg)
 * Click `Send` and you should receive a `Status: 200 OK` response in the body section below.
-![Postman 4](/assets/images/postman-4.jpg)
+>![Postman 4](/assets/images/postman-4.jpg)
 
-#### POST Transaction Errors
-* A `Status: 422 Unprocessable Entity` error response will occur if a transaction is sent in the following incorrect formats:
+#### POST route "/points" Errors
+* A `Status: 422 Unprocessable Entity` error response will occur if a request body is sent with the wrong format:
   * Negative points that would make `payer` points go below zero.
   * Adding 0 points
   * Missing parameters
@@ -72,9 +76,35 @@ We will be using **Postman** to make calls to the API.
   * Paramets with wrong type (e.g. timestamp not in ISO 8601 format)
 * Example error responses:
   * Extra param and incorrect timestamp format.
-  ![Postman 5](/assets/images/postman-5.jpg)
+  >![Postman 5](/assets/images/postman-5.jpg)
   * Negative points would make `payer` points go below zero.
-  ![Postman 6](/assets/images/postman-6.jpg)
+  >![Postman 6](/assets/images/postman-6.jpg)
+
+**NOTE:** When `payer` adds a negative amount of `points` and the payer has enough points to cover the negative amount, the transaction is not  added to the transaction list.  Instead, the negative points are subtracted from other transactions from the same `payer` from  newest  to oldest. If a transaction is completely negated from the negative points, it is removed from the transaction list.
+
+### POST route "/points/spend" - Spend User Points
+***REQUEST BODY FORMAT***
+```
+{"points": <str>}
+```
+* Make sure the request type is set to `POST`.
+* Enter the server port with the `/points/spend` endpoint.
+* Under the URL, select `Body` and  check the `raw` radio button and select `JSON` from the dropdown.
+* Enter a valid request body in the section below.
+* Click  `Send` and if the user has enough points, you should receive a `Status: 200 OK` response in the body section below along with a list showing how many points were spend from each `payer`.
+>![Postman 7](/assets/images/postman-7.jpg)
+
+#### POST route "/points/spend" Errors
+* A `Status: 422 Unprocessable Entity` error response will occur if a request body is sent with the wrong format:
+  * User doesn't have enough points to spend
+  * User spends 0 points
+  * Missing parameters
+  * Additional parameters
+  * Paramets with wrong type (e.g. points in string format)
+
+### GET route "/points" - Get Points Available Per Payer
+* This route gives the user their remaining available `points` per `payer`.
+>![Postman 8](/assets/images/postman-8.jpg)
 
 
 
