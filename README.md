@@ -38,8 +38,43 @@ This repo includes an Express.js server offering a REST API with Node.js that ac
     ```
 6) Verify the app is running by visiting http://localhost:5000 in your browser. You should see the following greeting: \
     ![homepage greeting](/assets/images/greeting.jpg)
-    
 
+## Making API calls
+**NOTE** Because this app doesn't use any durable data store, the app  will start from a clean slate whenever the sever is booted up, which means:
+* The user will have no points
+* There will be no payer transactions
+
+We will be using **Postman** to make calls to the API.  
+* Go to the [Postman](https://www.postman.com/) site.
+* Create an account or log in.
+* From your acount's home screen, create or use an existing `Workspace` by clicking on `Workspace` in the top left menu bar.
+* Once you're in a workspace, click on `Create a request` on the right under `Getting started`.
+* Now your interface should look like the image below.
+![Postman start](/assets/images/postman-start.jpg)
+* Let's start by adding some transactions
+
+### POST Transaction Route
+* Click the dropdown that says `GET` and select `POST`.
+* Enter the server port with the `/points` endpoint.
+![Postman 2](/assets/images/postman-2.jpg)
+* Under the URL, select `Body` and  check the `raw` radio button and select `JSON` from the dropdown.
+* Enter a valid transaction object in the section below, which you can copy and paste from [points.json](points.json).
+![Postman 3](/assets/images/postman-3.jpg)
+* Click `Send` and you should receive a `Status: 200 OK` response in the body section below.
+![Postman 4](/assets/images/postman-4.jpg)
+
+#### POST Transaction Errors
+* A `Status: 422 Unprocessable Entity` error response will occur if a transaction is sent in the following incorrect formats:
+  * Negative points that would make `payer` points go below zero.
+  * Adding 0 points
+  * Missing parameters
+  * Additional parameters
+  * Paramets with wrong type (e.g. timestamp not in ISO 8601 format)
+* Example error responses:
+  * Extra param and incorrect timestamp format.
+  ![Postman 5](/assets/images/postman-5.jpg)
+  * Negative points would make `payer` points go below zero.
+  ![Postman 6](/assets/images/postman-6.jpg)
 
 
 

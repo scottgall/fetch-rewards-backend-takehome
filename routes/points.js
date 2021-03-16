@@ -18,7 +18,7 @@ router.get('/', (req, res) => {
 router.post('/', [
   // validate & sanitize body of request
   body('payer').isString().toUpperCase(),
-  body('points').isInt(),
+  body('points').isInt().toInt(),
   body('timestamp').isISO8601(),
   body().custom(body => {
     const keys = ['payer', 'points', 'timestamp'];
@@ -90,7 +90,7 @@ router.post('/', [
 // POST route to spend points
 router.post('/spend', [
   // validate & sanitize body of request
-  body('points').isInt(),
+  body('points').isInt().toInt(),
   body().custom(body => {
     const keys = ['points'];
     return Object.keys(body).every(key => keys.includes(key));
