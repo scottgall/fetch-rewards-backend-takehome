@@ -1,5 +1,4 @@
 const express = require('express');
-const { body, validationResult } = require('express-validator');
 const pointsRoutes = require('./routes/points.js');
 
 const app = express();
