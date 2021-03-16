@@ -1,6 +1,5 @@
 # Fetch Rewards Coding Exercise - Backend Software Engineering
 This repo includes an Express.js server offering a REST API with Node.js that accepts HTTP request and returns responses based on conditions outlined later in this readme. 
-<hr>
 
 ## Project Premise
 * There is a `user` that can have `points` in their account from various `payers`.
@@ -10,7 +9,6 @@ This repo includes an Express.js server offering a REST API with Node.js that ac
 * The user can `spend` points.
   * The user's total points can't go below 0.
   * When spending points, the oldest points are spent first based on their transaction's timestamp, regardless of payer.
-<hr>
 
 ## Getting Started
 * Must have [Node.js](https://nodejs.org/) version v10.0.0 installed.
