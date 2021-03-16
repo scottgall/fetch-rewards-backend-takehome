@@ -11,24 +11,24 @@ This repo includes an Express.js server offering a REST API with Node.js that ac
   * When spending points, the oldest points are spent first based on their transaction's timestamp, regardless of payer.
 
 ## Getting Started
-* Must have [Node.js](https://nodejs.org/) version v10.0.0 installed.
-  * Verify version by running the command below in your terminal.
-  ```
-  node --version
-  ```
-1) Clone repo
+1) You must have [Node.js](https://nodejs.org/) version v10.0.0 installed.
+  Verify version by running the command below in your terminal.
+    ```
+    node --version
+    ```
+2) Clone repo
     ```
     git clone https://github.com/scottgall/fetch-rewards-backend-takehome.git
     ```
-2) Go to the project's root directory
+3) Go to the project's root directory
     ```
     cd /my/path/to/fetch-rewards-backend-takehome
     ```
-3) Install dependencies
+4) Install dependencies
     ```
     npm install
     ```
-4) Start the server!
+5) Start the server!
     ```
     npm start
     ```
@@ -36,8 +36,8 @@ This repo includes an Express.js server offering a REST API with Node.js that ac
     ```
     Server running on port: http://localhost:5000
     ```
-5) Verify the app is running by visiting http://localhost:5000 in your browser. You should see the following greeting:
->![homepage greeting](/assets/images/greeting.jpg)
+6) Verify the app is running by visiting http://localhost:5000 in your browser. You should see the following greeting: \
+    ![homepage greeting](/assets/images/greeting.jpg)
     
 
 
