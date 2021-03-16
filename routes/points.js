@@ -110,7 +110,7 @@ router.post('/spend', [
     }
     // return error if trying to spend more points than available
     if(points > totalPoints) {
-      return res.status(422).json({ error: "Unable to spend points.", reason: `Only ${totalPoints} points available to spend.`})
+      return res.status(422).json({ error: "Unable to spend points.", reason: `${totalPoints} points available to spend.`})
     }
     // subtract points to total
     totalPoints -= points;
@@ -140,11 +140,17 @@ router.post('/spend', [
       }
       counter++
     }
-
+    // remove transactions from list that are used up by spending points
+    for (let i=removeIndex.length - 1; i >= 0; i--) {
+      pointTransactions.splice(removeIndex[i],1);
+    };
+    
+    // create list of dictionary for response
     var spentList = [];
     for (const payer in spent) {
       spentList.push({ "payer": payer, "points": spent[payer]*-1})
     }
+    // send response if points spent
     res.status(200).send(spentList)
 });
 
