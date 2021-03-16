@@ -50,7 +50,7 @@ We will be using **Postman** to make calls to the API.
 * From your acount's home screen, create or use an existing `Workspace` by clicking on `Workspace` in the top left menu bar.
 * Once you're in a workspace, click on `Create a request` on the right under `Getting started`.
 * Now your interface should look like the image below.
->![Postman start](/assets/images/postman-start.jpg)
+>![Postman 1](/assets/images/postman-1.jpg)
 * Let's start by adding some transactions
 
 ## POST Route "/points" - Add Payer Transaction
