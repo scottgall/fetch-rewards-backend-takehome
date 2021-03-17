@@ -1,7 +1,7 @@
 # Fetch Rewards Coding Exercise - Backend Software Engineering
-An Express.js server offering a REST API with Node.js that accepts HTTP request and returns responses based on conditions outlined in the next section. 
+An back end REST API web service that accepts HTTP request and returns responses based on conditions outlined in the section below. 
 
-## Project Premise
+## Premise
 * There is a `user` that can have `points` in their account from various `payers`.
 * Payers submit `transactions` to add or subtract points from a user.
   * Transactions are stored in memory on the backend.
