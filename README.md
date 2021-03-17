@@ -93,6 +93,14 @@ We will be using **Postman** to make calls to the API.
 * Enter a valid request body in the section below.
 * Click  `Send` and if the user has enough points, you should receive a `Status: 200 OK` response in the body section below along with a list showing how many points were spend from each `payer`.
 >![Postman 7](/assets/images/postman-7.jpg)
+* The response above is the result of sending sending `{"points": 5000}` to `"/points/spend'` after the following transactions have been added by payers:
+  ```
+  {"payer": "DANNON", "points": 1000, "timestamp": "2020-11-02T14:00:00Z"}
+  {"payer": "UNILEVER", "points": 200, "timestamp": "2020-10-31T11:00:00Z"}
+  {"payer": "DANNON", "points": -200, "timestamp": "2020-10-31T15:00:00Z"}
+  {"payer": "MILLER COORS", "points": 10000, "timestamp": "2020-11-01T14:00:00Z"}
+  {"payer": "DANNON", "points": 300, "timestamp": "2020-10-31T10:00:00Z"}
+  ```
 
 #### POST route "/points/spend" Errors
 * A `Status: 422 Unprocessable Entity` error response will occur if a request body is sent with the wrong format:
