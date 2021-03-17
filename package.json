@@ -8,8 +8,8 @@
     "npm": ">=6.0.0"
   },
   "scripts": {
-    "start": "node index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha --exit",
+    "start": "node index.js"
   },
   "repository": {
     "type": "git",
@@ -23,7 +23,10 @@
   },
   "homepage": "https://github.com/scottgall/fetch-rewards-backend-takehome#readme",
   "dependencies": {
+    "chai": "^4.3.4",
+    "chai-http": "^4.3.0",
     "express": "^4.17.1",
-    "express-validator": "^6.10.0"
+    "express-validator": "^6.10.0",
+    "mocha": "^8.3.2"
   }
 }

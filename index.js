@@ -11,3 +11,5 @@ app.use('/points', pointsRoutes)
 app.get('/', (req, res) => res.send('Hi there 👋'));
 
 app.listen(PORT, () => console.log(`Server running on port: http://localhost:${PORT}`));
+
+// module.exports = app.listen(5000)
