@@ -11,17 +11,17 @@ An Express.js server offering a REST API with Node.js that accepts HTTP request 
   * When spending points, the oldest points are spent first based on their transaction's timestamp, regardless of payer.
 
 ## Dependencies/Tools
-* [Node.js](https://nodejs.org/) - Open-source and cross-platform JavaScript runtime environment
-* [Express.js](https://expressjs.com/) - Back end Node.js server framework for building web apps and APIs
+* [Node](https://nodejs.org/) - Open-source, cross-platform JavaScript runtime environment
+* [Express](https://expressjs.com/) - Back end Node.js server framework for building web apps and APIs
 * [Express-Validator](https://express-validator.github.io/docs/) - Express.js middleware library for server-side data validation
 * [Mocha](https://mochajs.org/) - JavaScript test framework that runs on Node.js and in the browser
-* [Chai](https://www.chaijs.com/) - Test assestion library for Node.js and the broser
+* [Chai](https://www.chaijs.com/) - Test asseertion library for Node.js and the browser
 * [Chai HTTP](https://www.npmjs.com/package/chai-http) - Chai plugin for testing RESTful APIs
 
 
 ## Getting Started
-1) You must have [Node.js](https://nodejs.org/) version v10.0.0 installed.
-  Verify version by running the command below in your terminal.
+1) You must have [Node](https://nodejs.org/) version v10.0.0 or higher installed.  
+  Verify Node version
     ```
     node --version
     ```
