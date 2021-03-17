@@ -1,5 +1,5 @@
 # Fetch Rewards Coding Exercise - Backend Software Engineering
-This repo includes an Express.js server offering a REST API with Node.js that accepts HTTP request and returns responses based on conditions outlined later in this readme. 
+An Express.js server offering a REST API with Node.js that accepts HTTP request and returns responses based on conditions outlined in the next section. 
 
 ## Project Premise
 * There is a `user` that can have `points` in their account from various `payers`.
@@ -10,13 +10,22 @@ This repo includes an Express.js server offering a REST API with Node.js that ac
   * The user's total points can't go below 0.
   * When spending points, the oldest points are spent first based on their transaction's timestamp, regardless of payer.
 
+## Dependencies/Tools
+* [Node.js](https://nodejs.org/) - Open-source and cross-platform JavaScript runtime environment
+* [Express.js](https://expressjs.com/) - Back end Node.js server framework for building web apps and APIs
+* [Express-Validator](https://express-validator.github.io/docs/) - Express.js middleware library for server-side data validation
+* [Mocha](https://mochajs.org/) - JavaScript test framework that runs on Node.js and in the browser
+* [Chai](https://www.chaijs.com/) - Test assestion library for Node.js and the broser
+* [Chai HTTP](https://www.npmjs.com/package/chai-http) - Chai plugin for testing RESTful APIs
+
+
 ## Getting Started
 1) You must have [Node.js](https://nodejs.org/) version v10.0.0 installed.
   Verify version by running the command below in your terminal.
     ```
     node --version
     ```
-2) Clone repo
+2) Clone repo locally
     ```
     git clone https://github.com/scottgall/fetch-rewards-backend-takehome.git
     ```
@@ -36,12 +45,12 @@ This repo includes an Express.js server offering a REST API with Node.js that ac
     ```
     Server running on port: http://localhost:5000
     ```
-6) Verify the app is running by visiting http://localhost:5000 in your browser. You should see the following greeting: \
+6) Verify the app is running by visiting http://localhost:5000 in your browser. You should see the following greeting:  
     ![homepage greeting](/assets/images/greeting.jpg)
 
 ## Making API calls
-**NOTE** Because this app doesn't use any durable data store, the app  will start from a clean slate whenever the sever is booted up, which means:
-* The user will have no points
+**NOTE** Because this web service doesn't use any durable data store, there will be no data in the backend whenever the sever is started, which means:
+* The user will initially have no points
 * There will be no payer transactions
 
 We will be using **Postman** to make calls to the API.  
@@ -114,5 +123,18 @@ We will be using **Postman** to make calls to the API.
 * This route gives the user their remaining available `points` per `payer`.
 >![Postman 8](/assets/images/postman-8.jpg)
 
+## Running Tests
+Run tests in [test.js](test/test.js) from the project's main directory:
+```
+npm test
+```
+Tests check that the app should:
+* `POST` a new transaction
+* NOT `POST` a new transaction with incorrect request body
+* `GET` all points by payer
+* `POST` spend points available
+* NOT `POST` spend an unavailable amount of points
+* NOT `POST` transaction with negative points if it would make the payer's points go negative
+* `POST` transactions with negative points if payer has enough points to cover the negative amount
 
 

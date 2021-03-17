@@ -23,10 +23,12 @@
   },
   "homepage": "https://github.com/scottgall/fetch-rewards-backend-takehome#readme",
   "dependencies": {
+    "express": "^4.17.1",
+    "express-validator": "^6.10.0"
+  },
+  "devDependencies": {
     "chai": "^4.3.4",
     "chai-http": "^4.3.0",
-    "express": "^4.17.1",
-    "express-validator": "^6.10.0",
     "mocha": "^8.3.2"
   }
 }
