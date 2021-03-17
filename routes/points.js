@@ -9,10 +9,12 @@ let payerPoints = {};
 // list of 'add points tranactions' objects 
 let pointTransactions = [];
 
+
 // GET route to see current available points by payer
 router.get('/', (req, res) => {
   res.send(payerPoints);
 });
+
 
 // POST route to add transactions
 router.post('/', [
@@ -31,7 +33,6 @@ router.post('/', [
     if(!errors.isEmpty()) return res.status(422).send(errors.array({ onlyFirstError: true}))
     next();
 }, (req, res) => {
-
     var payer = req.body.payer;
     var points = req.body.points;
     // return error if trying to add 0 points
@@ -87,6 +88,7 @@ router.post('/', [
     res.status(200).json({ success: "transaction added", transaction: req.body})
 });
 
+
 // POST route to spend points
 router.post('/spend', [
   // validate & sanitize body of request
@@ -102,7 +104,6 @@ router.post('/spend', [
     if(!errors.isEmpty()) return res.status(422).send(errors.array({ onlyFirstError: true}))
     next();
 }, (req, res) => {
-
     var points = req.body.points
     // return error if trying to add 0 points
     if(points <= 0) {
@@ -144,7 +145,6 @@ router.post('/spend', [
     for (let i=removeIndex.length - 1; i >= 0; i--) {
       pointTransactions.splice(removeIndex[i],1);
     };
-    
     // create list of dictionary for response
     var spentList = [];
     for (const payer in spent) {
@@ -153,6 +153,5 @@ router.post('/spend', [
     // send response if points spent
     res.status(200).send(spentList)
 });
-
 
 module.exports = router;
